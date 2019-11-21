@@ -7,7 +7,7 @@
 const app = require('../app');
 const debug = require('debug')('demo:server');
 const http = require('http');
-const Websocket = require('ws');
+const websocket = require('../ws/webSocket');
 
 /**
  * Get port from environment and store in Express.
@@ -21,18 +21,8 @@ let port = normalizePort(process.env.PORT || '3000');
  */
 
 let server = http.createServer(app.callback());
-app.wsServer = new Websocket.Server({
-    server
-});
-
-app.wsServer.on('connection', (ws, request, client) => {
-    ws.send('连接成功');
-    ws.on('message', (msg) => {
-        ws.send(JSON.stringify(msg));
-    });
-    console.log(`连接成功`);
-});
-
+// 注册websocket
+websocket(server);
 /**
  * Listen on provided port, on all network interfaces.
  */
