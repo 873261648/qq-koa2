@@ -2,21 +2,20 @@ const Koa = require('koa');
 const app = new Koa();
 const views = require('koa-views');
 const json = require('koa-json');
-const body = require('koa-body');
+const koaBody = require('koa-body');
 const onerror = require('koa-onerror');
 const logger = require('koa-logger');
 const path = require('path');
 const index = require('./routes/index');
-const users = require('./routes/users');
+const users = require('./routes/user');
 
 // error handler
 onerror(app);
 
 // middleWares
 
-app.use(body({
+app.use(koaBody({
   multipart: true, // 支持文件上传
-  encoding: 'gzip',
   formidable: {
     uploadDir: path.join(__dirname, 'public/upload/'), // 设置文件上传目录
     keepExtensions: true,    // 保持文件的后缀
