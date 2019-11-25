@@ -21,7 +21,7 @@ router.post('/signup', async (ctx, next) => {
 
 router.post('/login', async (ctx, next) => {
     let requiredResult = await required(ctx, {
-        phone: {required: true, type: "string"},
+        qq: {required: true, type: "string"},
         password: {required: true, type: "string"}
     });
     if (requiredResult) {
@@ -29,8 +29,8 @@ router.post('/login', async (ctx, next) => {
         return;
     }
     let result = await login(ctx.request.body);
-    if (!result.id) {
-        ctx.body = new ErrorModule('手机号或密码为空！');
+    if (!result.qq) {
+        ctx.body = new ErrorModule('手机号或密码错误！');
         return;
     }
     ctx.session = result;

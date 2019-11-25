@@ -20,15 +20,15 @@ async function signup({phone, password}) {
     return new SuccessModule(result.insertId)
 }
 
-async function login({phone, password}) {
-    phone = escape(xss(phone));
+async function login({qq, password}) {
+    qq = escape(xss(qq));
     password = escape(xss(genPassword(password)));
-    let sql = `SELECT id,phone,nickname,avatar FROM users WHERE phone=${phone} AND password=${password}`;
+    let sql = `SELECT qq,nickname,avatar FROM users WHERE qq=${qq} AND password=${password}`;
     let result = await exec(sql);
     return result[0] || {}
 }
 
-async function uploadPassword({id, phone, password}) {
+async function uploadPassword({}) {
     return new SuccessModule()
 }
 
