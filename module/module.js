@@ -27,8 +27,15 @@ class ErrorModule extends BaseModule {
         this.errno = -1;
     }
 }
+class NotLoginModule extends BaseModule {
+    constructor() {
+        super('登录失效请重新登录！');
+        this.errno = -2;
+    }
+}
 
 module.exports = {
     SuccessModule,
-    ErrorModule
+    ErrorModule,
+    NotLoginModule
 };

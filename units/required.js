@@ -1,7 +1,12 @@
-async function fn(params, rule) {
+async function fn(ctx, rule) {
     let msg = '';
     let keys = Object.keys(rule);
-
+    let params = {};
+    if (ctx.method === "GET") {
+        params = ctx.query;
+    } else {
+        params = ctx.request.body;
+    }
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
         if (rule[key].required && params[key] === undefined) {

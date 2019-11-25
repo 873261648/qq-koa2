@@ -23,20 +23,17 @@ async function signup({phone, password}) {
 async function login({phone, password}) {
     phone = escape(xss(phone));
     password = escape(xss(genPassword(password)));
-    let sql = `SELECT phone,nickname,avatar FROM users WHERE phone=${phone} AND password=${password}`;
+    let sql = `SELECT id,phone,nickname,avatar FROM users WHERE phone=${phone} AND password=${password}`;
     let result = await exec(sql);
-    if (!result.length) {
-        return new ErrorModule('手机号或密码错误')
-    }
-    return new SuccessModule(result[0])
+    return result[0] || {}
 }
 
-async function changePassword({id, phone, password}) {
+async function uploadPassword({id, phone, password}) {
     return new SuccessModule()
 }
 
 module.exports = {
     signup,
     login,
-    changePassword
+    uploadPassword
 };
