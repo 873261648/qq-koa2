@@ -30,7 +30,7 @@ router.post('/login', async (ctx, next) => {
     }
     let result = await login(ctx.request.body);
     if (!result.qq) {
-        ctx.body = new ErrorModule('手机号或密码错误！');
+        ctx.body = new ErrorModule('QQ号或密码错误！');
         return;
     }
     ctx.session = result;
