@@ -42,8 +42,8 @@ router.post('/logout', async (ctx, next) => {
     ctx.body = new SuccessModule();
 });
 
-router.post('/uploadpassword', async (ctx, next) => {
-
+router.get('/aaa', async (ctx, next) => {
+    ctx.body = new SuccessModule()
 });
 
 
