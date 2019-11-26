@@ -23,7 +23,7 @@ async function signup({phone, password}) {
 async function login({qq, password}) {
     qq = escape(xss(qq));
     password = escape(xss(genPassword(password)));
-    let sql = `SELECT qq,nickname,avatar FROM users WHERE qq=${qq} AND password=${password}`;
+    let sql = `SELECT qq,nickname,avatar FROM users WHERE password=${password} AND (qq=${qq} OR phone=${qq})`;
     let result = await exec(sql);
     return result[0] || {}
 }
