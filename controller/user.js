@@ -9,12 +9,12 @@ async function signup({phone, password}) {
     // 验证手机号是否重复
     let select = await exec(`SELECT phone FROM users WHERE phone=${phone}`);
     if (select.length) {
-        return new SuccessModule('手机号已存在')
+        return new ErrorModule('手机号已存在')
     }
 
     let createtime = Date.now();
     let random = Math.ceil(Math.random() * 10);
-    let avatar = `/public/update/default${random}.png`;
+    let avatar = `/upload/default${random}.png`;
     let sql = `INSERT INTO users(phone,nickname,password,createtime,avatar) VALUES(${phone},${phone},${password},${createtime},'${avatar}')`;
     let result = await exec(sql);
     return new SuccessModule(result.insertId)
