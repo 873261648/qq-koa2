@@ -4,7 +4,7 @@ const xss = require('xss');
 
 async function find({phone}) {
     phone = escape(xss(phone));
-    let sql = `SELECT id,phone,nickname,avatar FROM users WHERE phone=${phone}`;
+    let sql = `SELECT qq,phone,nickname,avatar FROM users WHERE phone=${phone}`;
     let result = await exec(sql);
     return new SuccessModule(
         result[0] || {}
@@ -12,7 +12,7 @@ async function find({phone}) {
 }
 
 async function stranger() {
-    let sql = `SELECT id,phone,nickname,avatar FROM users`;
+    let sql = `SELECT qq,phone,nickname,avatar FROM users`;
     let result = await exec(sql);
     return new SuccessModule(result);
 }
