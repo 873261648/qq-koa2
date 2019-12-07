@@ -32,8 +32,16 @@ async function uploadPassword({}) {
     return new SuccessModule()
 }
 
+async function info(qq) {
+    let sql = `SELECT qq,nickname,avatar,introduction FROM users WHERE qq=${qq} `;
+    let result = await exec(sql);
+    return result[0] || {}
+}
+
+
 module.exports = {
     signup,
     login,
-    uploadPassword
+    uploadPassword,
+    info
 };

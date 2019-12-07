@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-const {signup, login} = require('../controller/user');
+const {signup, login, info} = require('../controller/user');
 const required = require('../units/required');
 const {SuccessModule, ErrorModule} = require('../module/module');
 
@@ -33,7 +33,7 @@ router.post('/login', async (ctx, next) => {
         ctx.body = new ErrorModule('QQ号或密码错误！');
         return;
     }
-    ctx.session = result;
+    ctx.session.userInfo = result;
     ctx.body = new SuccessModule(result);
 });
 
@@ -42,8 +42,11 @@ router.post('/logout', async (ctx, next) => {
     ctx.body = new SuccessModule();
 });
 
-router.get('/aaa', async (ctx, next) => {
-    ctx.body = new SuccessModule()
+// 获取用户信息，参数qq，不传默认查自己的
+router.get('/info', async (ctx, next) => {
+    let qq = ctx.query.qq || ctx.session.userInfo.qq;
+    let result = await info(qq);
+    ctx.body = new SuccessModule(result);
 });
 
 
