@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const {signup, login, info} = require('../controller/user');
 const required = require('../units/required');
 const {SuccessModule, ErrorModule} = require('../module/module');
+const loginCheck = require('../middleware/loginCheck');
 
 
 router.prefix('/api/user/');
@@ -43,7 +44,7 @@ router.post('/logout', async (ctx, next) => {
 });
 
 // 获取用户信息，参数qq，不传默认查自己的
-router.get('/info', async (ctx, next) => {
+router.get('/info',loginCheck, async (ctx, next) => {
     let qq = ctx.query.qq || ctx.session.userInfo.qq;
     let result = await info(qq);
     ctx.body = new SuccessModule(result);

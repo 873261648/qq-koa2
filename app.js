@@ -12,6 +12,7 @@ const path = require('path');
 const index = require('./routes/index');
 const users = require('./routes/user');
 const friend = require('./routes/friend');
+const upload = require('./routes/upload');
 
 // error handler
 onerror(app);
@@ -23,6 +24,7 @@ app.use(session({
     cookie: {
         path: "/",
         httpOnly: true,
+        SameSite:"Strict",
         maxAge: 1000 * 60 * 60 * 24
     },
     store: redisStore({
@@ -63,6 +65,7 @@ app.use(async (ctx, next) => {
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 app.use(friend.routes(), friend.allowedMethods());
+app.use(upload.routes(), upload.allowedMethods());
 
 
 // error-handling
