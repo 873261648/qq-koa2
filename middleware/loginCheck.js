@@ -1,7 +1,7 @@
 const {NotLoginModule} = require('../module/module');
 
 async function loginCheck(ctx, next) {
-    if (!ctx.session.id) {
+    if (!ctx.session.userInfo) {
         ctx.body = new NotLoginModule();
         return;
     }

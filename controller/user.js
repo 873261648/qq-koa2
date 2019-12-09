@@ -38,10 +38,20 @@ async function info(qq) {
     return result[0] || {}
 }
 
+async function updateInfo(qq, userInfo) {
+    let keys = Object.keys(userInfo);
+    let values = keys.map(key => {
+        return `${key}=${escape(xss(userInfo[key]))}`
+    });
+    let sql = `UPDATE users SET ${values.join(',')} WHERE qq=${qq}`;
+    return await exec(sql)
+}
+
 
 module.exports = {
     signup,
     login,
+    info,
     uploadPassword,
-    info
+    updateInfo
 };
