@@ -17,7 +17,9 @@ router.post('/avatar', async (ctx, next) => {
         ctx.body = new ErrorModule();
         return;
     }
-    ctx.body = new SuccessModule()
+    ctx.body = new SuccessModule({
+        avatar:path.join('/upload', fileName)
+    })
 });
 
 module.exports = router;

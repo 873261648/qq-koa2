@@ -23,7 +23,7 @@ async function signup({phone, password}) {
 async function login({qq, password}) {
     qq = escape(xss(qq));
     password = escape(xss(genPassword(password)));
-    let sql = `SELECT qq,nickname,avatar FROM users WHERE password=${password} AND (qq=${qq} OR phone=${qq})`;
+    let sql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown,email,home_bg FROM users WHERE password=${password} AND (qq=${qq} OR phone=${qq})`;
     let result = await exec(sql);
     return result[0] || {}
 }
@@ -33,7 +33,7 @@ async function uploadPassword({}) {
 }
 
 async function info(qq) {
-    let sql = `SELECT qq,nickname,avatar,introduction FROM users WHERE qq=${qq} `;
+    let sql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown,email,home_bg FROM users WHERE qq=${qq} `;
     let result = await exec(sql);
     return result[0] || {}
 }
