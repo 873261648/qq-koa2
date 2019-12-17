@@ -17,13 +17,20 @@ async function stranger() {
     return new SuccessModule(result);
 }
 
-async function add({friendID, message}, userID) {
+async function add({id: friendID, message, remark, sort}, userID) {
+    let repeatSql = `SELECT * FROM add_friend WHERE user_id=${userID} AND friend_id=${friendID} OR user_id=${friendID} AND friend_id=${userID}`;
+    let repeatRes = await exec(repeatSql);
+    if (repeatRes.length) {
+        return new ErrorModule(repeatRes, '已经发过请求了哦');
+    }
+
     let createtime = Date.now();
     message = escape(xss(message));
-    let sql = `INSERT INTO add_friend(user_id,friend_id,message,createtime,status) VALUE(${userID},${friendID},${message},${createtime},0)`;
+    remark = escape(xss(remark));
+    let sql = `INSERT INTO add_friend(user_id,friend_id,message,createtime,remark,sort,status) VALUES(${userID},${friendID},${message},${createtime},${remark},'${sort}',-1)`;
     let result = await exec(sql);
     if (result.insertId) {
-        return new SuccessModule(result.insertId);
+        return new SuccessModule();
     } else {
         return new ErrorModule(result);
     }
@@ -46,7 +53,20 @@ async function agree({friendID}, userID) {
 async function addList(userID) {
     let sql = `SELECT * FROM add_friend WHERE user_id=${userID} OR friend_id=${userID} ORDER BY createtime DESC`;
     let result = await exec(sql);
-    return new SuccessModule(result);
+    let users = result.map(item => {
+        if (item.user_id === userID) {
+            return `qq=${item.friend_id}`;
+        } else {
+            return `qq=${item.user_id}`;
+        }
+    });
+    let usersSql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown FROM users WHERE ${users.join(' OR ')}`;
+    console.log(usersSql);
+    let usersResult = await exec(usersSql);
+
+
+
+    return new SuccessModule(usersResult);
 }
 
 
