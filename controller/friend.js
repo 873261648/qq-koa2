@@ -36,12 +36,17 @@ async function add({id: friendID, message, remark, sort}, userID) {
     }
 }
 
-async function agree({friendID}, userID) {
+async function agree({id}) {
     // 先更新状态为已通过，在将好友添加到friend表里
-    let sql = `UPDATE friend SET status=1' WHERE user_id=${userID} AND friend_id=${friendID}`;
+    let sql = `UPDATE add_friend SET status=1 WHERE id=${id}`;
     let result = await exec(sql);
+    let addFriendInfoSql = `SELECT * FROM add_friend WHERE id=${id}`;
+    let addFriendInfoInfo = await exec(addFriendInfoSql);
+    let {user_id, friend_id, remark, sort} = addFriendInfoInfo[0];
+
+
     let createtime = Date.now();
-    let addSql = `INSERT INTO friend(user_id,friend_id,createtime) VALUE(${userID},${friendID},${createtime})`;
+    let addSql = `INSERT INTO friend(user_id,friend_id,remark,sort,createtime) VALUE(${user_id},${friend_id},'${remark}','${sort}',${createtime})`;
     let addResult = await exec(addSql);
     if (addResult.insertId) {
         return new SuccessModule();
@@ -61,12 +66,24 @@ async function addList(userID) {
         }
     });
     let usersSql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown FROM users WHERE ${users.join(' OR ')}`;
-    console.log(usersSql);
     let usersResult = await exec(usersSql);
+    result.map(item => {
+        for (let i = 0; i < usersResult.length; i++) {
+            let friendQQ;
+            if (item.user_id === userID) {
+                friendQQ = item.friend_id
+            } else {
+                friendQQ = item.user_id
+            }
+            if (friendQQ === usersResult[i].qq) {
+                item.friendInfo = usersResult[i];
+                break;
+            }
+        }
+    });
 
 
-
-    return new SuccessModule(usersResult);
+    return new SuccessModule(result);
 }
 
 
