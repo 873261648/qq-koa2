@@ -65,7 +65,7 @@ async function addList(userID) {
             return `qq=${item.user_id}`;
         }
     });
-    let usersSql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown FROM users WHERE ${users.join(' OR ')}`;
+    let usersSql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown FROM users${users.length ? ' WHERE ' + users.join(' OR ') : ''}`;
     let usersResult = await exec(usersSql);
     result.map(item => {
         for (let i = 0; i < usersResult.length; i++) {

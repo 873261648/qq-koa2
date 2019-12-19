@@ -17,7 +17,7 @@ if (ENV === 'dev') {
     MYSQL_CONF = {
         host: "localhost:3306",
         user: "root",
-        password: "873261648@ying",
+        password: "873261648@YIng",
         database: "qq"
     };
     REDIS_CONF = {
