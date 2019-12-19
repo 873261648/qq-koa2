@@ -26,13 +26,15 @@ router.get('/stranger', async (ctx, next) => {
 router.post('/add', async (ctx, next) => {
     let requiredResult = await required(ctx, {
         id: {required: true},
-        message: {}
+        message: {},
+        remark: {},
+        sort: {}
     });
     if (requiredResult) {
         ctx.body = new ErrorModule(requiredResult);
         return;
     }
-    let userID = ctx.session.id;
+    let userID = ctx.session.userInfo.qq;
     ctx.body = await add(ctx.request.body, userID);
 });
 
@@ -45,7 +47,7 @@ router.post('/agree', async (ctx, next) => {
         ctx.body = new ErrorModule(requiredResult);
         return;
     }
-    let userID = ctx.session.id;
+    let userID = ctx.session.userInfo.qq;
     ctx.body = await agree(ctx.request.body, userID);
 });
 
@@ -53,7 +55,7 @@ router.post('/agree', async (ctx, next) => {
 router.get('/addlist', async (ctx, next) => {
     ctx.body = new SuccessModule();
 
-    let userID = ctx.session.id;
+    let userID = ctx.session.userInfo.qq;
     ctx.body = await addList(userID);
 });
 
