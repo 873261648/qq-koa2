@@ -46,7 +46,7 @@ async function agree({id}) {
 
 
     let createtime = Date.now();
-    let addSql = `INSERT INTO friend(user_id,friend_id,remark,sort,createtime) VALUE(${user_id},${friend_id},'${remark}','${sort}',${createtime})`;
+    let addSql = `INSERT INTO friend(user_id,friend_id,remark,sort,createtime) VALUE(${user_id},${friend_id},'${remark}','${sort}',${createtime}); INSERT INTO friend(user_id,friend_id,remark,sort,createtime) VALUE(${friend_id},${user_id},'','',${createtime});`;
     let addResult = await exec(addSql);
     if (addResult.insertId) {
         return new SuccessModule();

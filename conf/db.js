@@ -4,6 +4,7 @@ let MYSQL_CONF, REDIS_CONF;
 
 if (ENV === 'dev') {
     MYSQL_CONF = {
+        multipleStatements:true,
         host: "localhost",
         user: "root",
         password: "873261648@ying",
@@ -15,6 +16,7 @@ if (ENV === 'dev') {
     }
 } else {
     MYSQL_CONF = {
+        multipleStatements:true,
         host: "localhost:3306",
         user: "root",
         password: "873261648@YIng",
