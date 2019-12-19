@@ -1,14 +1,14 @@
 const router = require('koa-router')();
-const {find, stranger, add, agree, addList} = require('../controller/friend');
+const {find, stranger, add, agree, addList,allFriend} = require('../controller/friend');
 const {SuccessModule, ErrorModule} = require('../module/module');
 const required = require('../units/required');
 
 router.prefix('/api/friend');
 
-// 根据手机号查找
+// 根据QQ号和手机号查找，优先QQ
 router.get('/find', async (ctx, next) => {
     let requiredResult = await required(ctx, {
-        phone: {required: true}
+        qq: {required: true}
     });
     if (requiredResult) {
         ctx.body = new ErrorModule(requiredResult);
@@ -53,10 +53,17 @@ router.post('/agree', async (ctx, next) => {
 
 // 好友申请列表
 router.get('/addlist', async (ctx, next) => {
-    ctx.body = new SuccessModule();
+    // ctx.body = new SuccessModule();
 
     let userID = ctx.session.userInfo.qq;
     ctx.body = await addList(userID);
 });
+
+// 获取所有好友
+router.get('/allfriend', async (ctx, next) => {
+    let qq = ctx.session.userInfo.qq;
+    ctx.body = await allFriend(qq);
+});
+
 
 module.exports = router;

@@ -2,9 +2,9 @@ const {SuccessModule, ErrorModule} = require('../module/module');
 const {exec, escape} = require('../db/mysql');
 const xss = require('xss');
 
-async function find({phone}) {
-    phone = escape(xss(phone));
-    let sql = `SELECT qq,phone,nickname,avatar FROM users WHERE phone=${phone}`;
+async function find({qq}) {
+    qq = escape(xss(qq));
+    let sql = `SELECT qq,phone,nickname,avatar FROM users WHERE qq=${qq}`;
     let result = await exec(sql);
     return new SuccessModule(
         result[0] || {}
@@ -81,9 +81,34 @@ async function addList(userID) {
             }
         }
     });
-
-
     return new SuccessModule(result);
+}
+
+async function allFriend(qq) {
+    let sql = `SELECT friend_id,remark,sort FROM friend WHERE user_id=${qq}`;
+    let result = await exec(sql);
+    if (!result.length) {
+        return new SuccessModule([])
+    }
+
+    let friends = result.map(item => `qq=${item.friend_id}`);
+    let friendSql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown 
+        FROM users 
+        WHERE ${friends.join(' OR ')}`;
+    let friendRes = await exec(friendSql);
+    friendRes = friendRes.map(item => {
+        for (let i = 0; i < result.length; i++) {
+            if (item.qq === result[i].friend_id) {
+                return {
+                    ...item,
+                    remark: result[i].remark,
+                    sort: result[i].sort
+                }
+            }
+        }
+    });
+
+    return new SuccessModule(friendRes);
 }
 
 
@@ -92,5 +117,6 @@ module.exports = {
     stranger,
     add,
     agree,
-    addList
+    addList,
+    allFriend
 };
