@@ -45,8 +45,8 @@ router.post('/logout', async (ctx, next) => {
 
 // 获取用户信息，参数qq，不传默认查自己的
 router.get('/info', async (ctx, next) => {
-    let qq = ctx.query.qq || ctx.session.userInfo.qq;
-    let result = await info(qq);
+    let qq = ctx.query.qq || 0;
+    let result = await info(qq, ctx.session.userInfo.qq);
     ctx.body = new SuccessModule(result);
 });
 router.post('/updateinfo', async (ctx, next) => {
