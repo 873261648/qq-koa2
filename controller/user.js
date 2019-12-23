@@ -35,13 +35,13 @@ async function uploadPassword({}) {
 async function info(selectID, userID) {
     // 获取用户信息，参数qq，不传默认查自己的
     let qq = selectID || userID;
-    let sql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown,email,home_bg FROM users WHERE qq=${selectID} `;
+    let sql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown,email,home_bg FROM users WHERE qq=${qq} `;
     let result = await exec(sql);
     let userInfo = result[0] || {};
     userInfo.areYouFriends = false;
     // 如果这个人不是自己，查一下这个人是否是自己的好友；
     if (selectID !== userID) {
-        let friendSql = `SELECT friend_id FROM friend WHERE friend_id=${selectID} AND user_id=${userID}`;
+        let friendSql = `SELECT friend_id FROM friend WHERE user_id=${userID} AND friend_id=${selectID}`;
         let friendRes = await exec(friendSql);
         userInfo.areYouFriends = friendRes.length !== 0;
     }
