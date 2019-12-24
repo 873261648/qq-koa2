@@ -9,7 +9,6 @@ function init(server) {
 }
 
 function connection(ws, request, client) {
-    ws.send('连接成功');
     ws.on('message', function (msg) {
         return message(msg, ws)
     });
@@ -18,6 +17,4 @@ function connection(ws, request, client) {
 function message(msg, ws) {
     ws.send(JSON.stringify(msg));
 }
-
-
 module.exports = init;

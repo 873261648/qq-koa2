@@ -41,9 +41,16 @@ async function info(selectID, userID) {
     userInfo.areYouFriends = false;
     // 如果这个人不是自己，查一下这个人是否是自己的好友；
     if (selectID !== userID) {
-        let friendSql = `SELECT friend_id FROM friend WHERE user_id=${userID} AND friend_id=${selectID}`;
+        let friendSql = `SELECT remark,sort FROM friend WHERE user_id=${userID} AND friend_id=${selectID}`;
         let friendRes = await exec(friendSql);
-        userInfo.areYouFriends = friendRes.length !== 0;
+        if (friendRes.length) {
+            userInfo = {
+                ...userInfo,
+                areYouFriends: true,
+                remark: friendRes[0].remark,
+                sort: friendRes[0].sort,
+            }
+        }
     }
 
     return userInfo
