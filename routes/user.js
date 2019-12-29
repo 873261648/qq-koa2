@@ -44,12 +44,12 @@ router.post('/logout', async (ctx, next) => {
 });
 
 // 获取用户信息，参数qq，不传默认查自己的
-router.get('/info', async (ctx, next) => {
+router.get('/info', loginCheck, async (ctx, next) => {
     let qq = ctx.query.qq || 0;
     let result = await info(qq, ctx.session.userInfo.qq);
     ctx.body = new SuccessModule(result);
 });
-router.post('/updateinfo', async (ctx, next) => {
+router.post('/updateinfo',loginCheck, async (ctx, next) => {
     let result = await updateInfo(ctx.session.userInfo.qq, ctx.request.body);
     if (result.affectedRows === 0) {
         ctx.body = new ErrorModule(result);

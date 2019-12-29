@@ -5,7 +5,7 @@ async function loginCheck(ctx, next) {
         ctx.body = new NotLoginModule();
         return;
     }
-    next()
+    await next()
 }
 
 module.exports = loginCheck;
