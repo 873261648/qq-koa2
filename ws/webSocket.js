@@ -11,7 +11,6 @@ function init(server) {
 
 function connection(ws, request, client) {
     ws.on('message', function (msg) {
-        console.log(msg);
         wsRouter(msg, ws, wsServer)
     });
 }
