@@ -13,6 +13,8 @@ const index = require('./routes/index');
 const users = require('./routes/user');
 const friend = require('./routes/friend');
 const upload = require('./routes/upload');
+const conversation = require('./routes/conversation');
+const record = require('./routes/record');
 
 
 // error handler
@@ -25,7 +27,7 @@ app.use(session({
     cookie: {
         path: "/",
         httpOnly: true,
-        SameSite:"Strict",
+        SameSite: "Strict",
         maxAge: 1000 * 60 * 60 * 24
     },
     store: redisStore({
@@ -67,6 +69,8 @@ app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 app.use(friend.routes(), friend.allowedMethods());
 app.use(upload.routes(), upload.allowedMethods());
+app.use(conversation.routes(), conversation.allowedMethods());
+app.use(record.routes(), record.allowedMethods());
 
 
 // error-handling

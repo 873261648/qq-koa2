@@ -1,6 +1,7 @@
 const {SuccessModule, ErrorModule} = require('../module/module');
 const {info} = require('../controller/user');
-const {add} = require('../controller/conversation');
+const {add:addConversation} = require('../controller/conversation');
+const {add:addRecord} = require('../controller/record');
 const xss = require('xss');
 
 let initInfo = async (data, ws) => {
@@ -14,7 +15,9 @@ let newMessage = async (data, ws, wsServer) => {
             item.send(JSON.stringify(data));
         }
     });
-    await add(data);
+    // 存入聊天记录表
+    addRecord(data);
+    addConversation(data);
 };
 
 
@@ -28,7 +31,7 @@ let router = (message, ws, wsServer) => {
             newMessage(data, ws, wsServer);
             break;
         default:
-            ws.send(JSON.send(new SuccessModule('cmd参数错误！')))
+            ws.send(JSON.stringify(new SuccessModule('cmd参数错误！')))
     }
 };
 
