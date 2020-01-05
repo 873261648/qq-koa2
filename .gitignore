@@ -23,4 +23,4 @@ yarn-error.log*
 dump.rdb
 /public/upload/
 dump.rdb
-conf/db.js
+src/conf/db.js

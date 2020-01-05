@@ -2,6 +2,7 @@ const {exec, escape} = require("../db/mysql");
 const xss = require('xss');
 const {genPassword} = require('../units/encryp');
 const {SuccessModule, ErrorModule} = require('../module/module');
+const {redisGet, redisSet} = require('../db/redis');
 
 async function signup({phone, password}) {
     phone = escape(xss(phone));
@@ -35,12 +36,19 @@ async function uploadPassword({}) {
 async function info(selectID, userID) {
     // 获取用户信息，参数qq，不传默认查自己的
     let qq = selectID || userID;
-    let sql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown,email,home_bg FROM users WHERE qq=${qq} `;
-    let result = await exec(sql);
-    let userInfo = result[0] || {};
+    let userInfo;
+    let userInfoAtRedis = await redisGet(`userInfo:${qq}`);
+    if (userInfoAtRedis) {
+        userInfo = userInfoAtRedis;
+    } else {
+        let sql = `SELECT qq,nickname,avatar,introduction,birthday,gender,office,company,location,hometown,email,home_bg FROM users WHERE qq=${qq} `;
+        let result = await exec(sql);
+        userInfo = result[0] || {};
+        redisSet(`userInfo:${qq}`, userInfo);
+    }
     userInfo.areYouFriends = false;
     // 如果这个人不是自己，查一下这个人是否是自己的好友；
-    if (selectID !== userID) {
+    if (selectID !== undefined && selectID !== userID) {
         let friendSql = `SELECT remark,sort FROM friend WHERE user_id=${userID} AND friend_id=${selectID}`;
         let friendRes = await exec(friendSql);
         if (friendRes.length) {
@@ -52,7 +60,6 @@ async function info(selectID, userID) {
             }
         }
     }
-
     return userInfo
 }
 

@@ -4,10 +4,10 @@
  * Module dependencies.
  */
 
-const app = require('../app');
+const app = require('../src/app');
 const debug = require('debug')('demo:server');
 const http = require('http');
-const websocket = require('../ws/webSocket');
+const websocket = require('../src/ws/webSocket');
 
 /**
  * Get port from environment and store in Express.
