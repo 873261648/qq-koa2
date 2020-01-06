@@ -17,14 +17,16 @@ let newMessage = async (data, ws, wsServer) => {
     };
     // 存入聊天记录表
     let insetRecordRes = addRecord(data);
+    // 判断是不是自己，如果是自己的话就不增加未读条数
+    let isMe = ws.userInfo.qq === data.sender;
     // 存入会话表
-    await addConversation(data);
+    await addConversation(data, isMe);
     let friendData = {
         ...data,
         sender: data.target,
         target: data.sender
     };
-    let conversationResult = await addConversation(friendData);
+    let conversationResult = await addConversation(friendData, !isMe);
     data.id = insetRecordRes.insertId;
     data.conversationID = conversationResult.insertId;
 

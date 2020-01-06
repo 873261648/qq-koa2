@@ -4,9 +4,9 @@ const xss = require('xss');
 async function add(data) {
     let message = escape(xss(data.message));
     // 存入数据库后会被转义，所以多一个；
-    data.avatar = data.avatar.replace(/\\/g,'\\\\');
+    let avatar = data.avatar.replace(/\\/g,'\\\\');
     let sql = `INSERT INTO record(sender,target,message,time,avatar,name) 
-        VALUE(${data.sender},${data.target},${message},${data.time},'${data.avatar}','${data.name}')`;
+        VALUE(${data.sender},${data.target},${message},${data.time},'${avatar}','${data.name}')`;
     return await exec(sql);
 }
 

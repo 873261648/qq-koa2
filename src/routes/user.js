@@ -49,7 +49,7 @@ router.get('/info', loginCheck, async (ctx, next) => {
     let result = await info(ctx.query.qq, ctx.session.userInfo.qq);
     ctx.body = new SuccessModule(result);
 });
-router.post('/updateinfo', loginCheck, async (ctx, next) => {
+router.post('/update_info', loginCheck, async (ctx, next) => {
     let result = await updateInfo(ctx.session.userInfo.qq, ctx.request.body);
     if (result.affectedRows === 0) {
         ctx.body = new ErrorModule(result);
