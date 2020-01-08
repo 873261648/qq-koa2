@@ -27,6 +27,7 @@ let newMessage = async (data, ws, wsServer) => {
         target: data.sender
     };
     let conversationResult = await addConversation(friendData, !isMe);
+
     data.id = insetRecordRes.insertId;
     data.conversationID = conversationResult.insertId;
 
