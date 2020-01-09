@@ -2,7 +2,7 @@ const {exec, escape} = require("../db/mysql");
 const xss = require('xss');
 const {genPassword} = require('../units/encryp');
 const {SuccessModule, ErrorModule} = require('../module/module');
-const {redisGet, redisSet} = require('../db/redis');
+const {redisGet, redisSet, redisDel} = require('../db/redis');
 
 async function signup({phone, password}) {
     phone = escape(xss(phone));
@@ -64,6 +64,9 @@ async function info(selectID, userID) {
 }
 
 async function updateInfo(qq, userInfo) {
+    // 删除redis中的缓存的信息，再次获取新的
+    redisDel(`userInfo:${qq}`);
+
     let keys = Object.keys(userInfo);
     let values = keys.map(key => {
         return `${key}=${escape(xss(userInfo[key]))}`
