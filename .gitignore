@@ -27,3 +27,4 @@ conf/db.js
 /ssl/
 /ssl/2875131_guoyuchen.cn.key
 /ssl/2875131_guoyuchen.cn.pem
+src/conf/db.js

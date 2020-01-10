@@ -1,6 +1,5 @@
 const mysql = require('mysql');
 const {MYSQL_CONF} = require('../conf/db');
-
 let con = mysql.createConnection(MYSQL_CONF);
 
 con.connect((err) => {

@@ -1,11 +1,14 @@
-const {REDIS_CONF} = require("../conf/db"), redis = require('redis');
+const {REDIS_CONF} = require("../conf/db");
+const redis = require('koa-redis');
 
-const redisClient = redis.createClient(REDIS_CONF.port, REDIS_CONF.host);
+const redisStore = redis({all: `${REDIS_CONF.host}:${REDIS_CONF.port}`});
+const redisClient = redisStore.client;
 
 // 监控异常
-redisClient.on('error', err => {
+redisStore.on('error', err => {
     console.error(err)
 });
+
 
 function redisGet(key) {
     return new Promise((resolve, reject) => {
@@ -34,16 +37,13 @@ function redisSet(key, val) {
     redisClient.set(key, val)
 }
 
+
 function redisDel(key) {
     redisClient.del(key);
-    console.log(key);
-    redisGet(key).then(val => {
-        console.log(val)
-    })
-
 }
 
 module.exports = {
+    redisStore,
     redisGet,
     redisSet,
     redisDel

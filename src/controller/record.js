@@ -1,13 +1,13 @@
 const {exec, escape} = require('../db/mysql');
 const xss = require('xss');
-const path = require('path');
 
-function add(data) {
+async function add(data) {
     let message = escape(xss(data.message));
+    // 存入数据库后会被转义，所以多一个；
+    let avatar = data.avatar.replace(/\\/g,'\\\\');
     let sql = `INSERT INTO record(sender,target,message,time,avatar,name) 
-        VALUE(${data.sender},${data.target},${message},${data.time},'${data.avatar}','${data.name}')`;
-    console.log(sql);
-    exec(sql);
+        VALUE(${data.sender},${data.target},${message},${data.time},'${avatar}','${data.name}')`;
+    return await exec(sql);
 }
 
 async function list(userID, friendID) {

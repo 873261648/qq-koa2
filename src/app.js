@@ -1,20 +1,19 @@
 const Koa = require('koa');
 const app = new Koa();
-const redisStore = require('koa-redis');
 const session = require('koa-generic-session');
 const views = require('koa-views');
 const json = require('koa-json');
 const koaBody = require('koa-body');
 const onerror = require('koa-onerror');
 const logger = require('koa-logger');
-const {REDIS_CONF} = require('./conf/db');
 const path = require('path');
-const index = require('./routes/index');
+const index = require('./routes');
 const users = require('./routes/user');
 const friend = require('./routes/friend');
 const upload = require('./routes/upload');
 const conversation = require('./routes/conversation');
 const record = require('./routes/record');
+const {redisStore, redisSet} = require('./db/redis');
 
 const html = require('./units/html');
 
@@ -31,10 +30,7 @@ app.use(session({
         SameSite: "Strict",
         maxAge: 1000 * 60 * 60 * 24
     },
-    store: redisStore({
-        // 配置redis
-        all: `${REDIS_CONF.host}:${REDIS_CONF.port}`
-    })
+    store: redisStore
 }));
 
 // 返回html页面
@@ -44,7 +40,7 @@ app.use(html());
 app.use(koaBody({
     multipart: true, // 支持文件上传
     formidable: {
-        uploadDir: path.join(__dirname, 'public/upload/'), // 设置文件上传目录
+        uploadDir: path.join(__dirname, '../', 'public/upload/'), // 设置文件上传目录
         keepExtensions: true,    // 保持文件的后缀
         maxFieldsSize: 2 * 1024 * 1024, // 文件上传大小,
     }
@@ -53,7 +49,7 @@ app.use(koaBody({
 
 app.use(json());
 app.use(logger());
-app.use(require('koa-static')(__dirname + '/public'));
+app.use(require('koa-static')(path.join(__dirname, '../', '/public')));
 
 app.use(views(__dirname + '/views', {
     extension: 'pug'
