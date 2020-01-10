@@ -16,6 +16,7 @@ const upload = require('./routes/upload');
 const conversation = require('./routes/conversation');
 const record = require('./routes/record');
 
+const html = require('./units/html');
 
 // error handler
 onerror(app);
@@ -36,6 +37,8 @@ app.use(session({
     })
 }));
 
+// 返回html页面
+app.use(html());
 
 // middleWares
 app.use(koaBody({

@@ -17,7 +17,7 @@ if (ENV === 'dev') {
 } else {
     MYSQL_CONF = {
         multipleStatements:true,
-        host: "localhost:3306",
+        host: "localhost",
         user: "root",
         password: "873261648@YIng",
         database: "qq"

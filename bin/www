@@ -6,56 +6,46 @@
 
 const app = require('../app');
 const debug = require('debug')('demo:server');
+const https = require('https');
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
 const websocket = require('../ws/webSocket');
 
 /**
  * Get port from environment and store in Express.
  */
 
-let port = normalizePort(process.env.PORT || '3000');
-// app.set('port', port);
 
-/**
- * Create HTTP server.
- */
-
+let httpsPort = '443';
+let httpPort = '80';
+// 创建http服务
 let server = http.createServer(app.callback());
 // 注册websocket
 websocket(server);
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port, () => {
-    console.log(`server run at http://localhost:${port}`)
+server.listen(httpPort, () => {
+    console.log(`server run at http://localhost`)
 });
 server.on('error', onError);
 server.on('listening', onListening);
 
-/**
- * Normalize a port into a number, string, or false.
- */
+// 创建https服务
+let options = {
+    key: fs.readFileSync(path.join('ssl','2875131_guoyuchen.cn.key')),
+    cert: fs.readFileSync(path.join('ssl','2875131_guoyuchen.cn.pem'))
+};
 
-function normalizePort(val) {
-    let port = parseInt(val, 10);
+let httpsServer = https.createServer(options,app.callback());
+// 注册websocket
+websocket(httpsServer);
 
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
+httpsServer.listen(httpsPort, () => {
+    console.log(`server run at https://localhost`)
+});
+httpsServer.on('error', onError);
+httpsServer.on('listening', onListening);
 
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-
-    return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
 
 function onError(error) {
     if (error.syscall !== 'listen') {
